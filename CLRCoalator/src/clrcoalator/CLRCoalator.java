@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  *
@@ -37,37 +36,11 @@ public class CLRCoalator {
         BufferedReader namesReader = null;
         
         String line = null;
-        ArrayList<ArrayList<String>> inTable = null;
         ArrayList<String> nameList = null;
         
-        int r, c = 0;
-        ArrayList<ArrayList<String>> outTable = null;
+        int col, count = 0;
         
         try{
-            //Import file
-            in = new FileInputStream(SOURCEFILE);
-            inReader = new BufferedReader(new InputStreamReader(in));
-            
-            //Parse to ArrayList table
-            inTable = new ArrayList();
-            //Remove first line
-            line = inReader.readLine();
-            line = inReader.readLine();
-            //Cycle through every line
-            int count = 0;
-            while(line != null) {
-                //Split Line
-                String[] tempArray = line.split(",");
-                //Convert to ArrayList
-                ArrayList<String> tempArrayList = new ArrayList(Arrays.asList(tempArray));
-                //Add to table
-                inTable.add(tempArrayList);
-                System.out.print("Line " + count + " added.\n");
-                count++;
-                line = inReader.readLine();
-            }
-            
-            inReader.close();
             names = new FileInputStream(NAMEFILE);
             namesReader = new BufferedReader(new InputStreamReader(names));
             
@@ -89,33 +62,36 @@ public class CLRCoalator {
             namesReader.close();
             outStream = new PrintWriter(OUTPUTFILE, "UTF-8");
             outStream.print("");
+            in = new FileInputStream(SOURCEFILE);
+            inReader = new BufferedReader(new InputStreamReader(in));
             
-            //Make sure the correct number of items are in tables
-            if(nameList.size() != inTable.size()) {
-                throw new Exception("Table sizes don't match.");
-            }
-            
-            //Rearange
+            //Import and rearange
+            line = inReader.readLine();
+            System.out.print(line+"\n");
+            line = inReader.readLine();
+            System.out.print(line+"\n");
             count = 0;
-            int start = 0;
-            for(c = 1; c < inTable.get(0).size(); c++){
-                for(r = start; r < inTable.size(); r++){
-                    float temp = Float.valueOf(inTable.get(r).get(c));
+            int row = 1;
+            while(line != null){
+                String[] input = line.split(",");
+                System.out.println(input.length);
+                for(col = row; col < input.length; col++){
+                    float temp = Float.valueOf(input[col]);
                     if(temp != 0.0) {
-                        outStream.write( '"' + nameList.get(c-1) + '"');
+                        outStream.write( '"' + nameList.get(row-1) + '"');
                         outStream.write(",");
-                        outStream.write('"' + nameList.get(r) + '"');
+                        outStream.write('"' + nameList.get(col-1) + '"');
                         outStream.write(",");
-                        outStream.write(inTable.get(r).get(c));
+                        outStream.write(input[col]);
                         outStream.write("\n");
-                        System.out.print("Row " + r + " Column " + c +" Line " + count + " written.\n");
+                        System.out.print("Line " + count + " Row " + (row-1) +" Column " + (col-1) + " written.\n");
                     } else {
                         System.out.print("Line " + count + " value 0.\n");
                     }
                     
                     count++;
                 }
-                start++;
+                row++;
             }
             
         }catch(Exception e){
