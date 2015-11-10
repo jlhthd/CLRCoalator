@@ -67,9 +67,7 @@ public class CLRCoalator {
             
             //Import and rearange
             line = inReader.readLine();
-            System.out.print(line+"\n");
             line = inReader.readLine();
-            System.out.print(line+"\n");
             count = 0;
             int row = 1;
             while(line != null){
@@ -92,6 +90,7 @@ public class CLRCoalator {
                     count++;
                 }
                 row++;
+                line = inReader.readLine();
             }
             
         }catch(Exception e){
